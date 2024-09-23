@@ -1,0 +1,70 @@
+---
+title: "Datasets Summaries"
+format: html
+editor: visual
+---
+
+---
+Dataset Summaries 
+
+Bess Tyler 
+
+
+Dataset:  Big Bang Theory 
+
+Overview: This is a dataset that shares information from the TV Show Big Band Theory. 
+
+•	No.overall - Number of Episode Overall
+•	No. inseason - Number of Episode in the specific Season
+•	Title - Title of the Episode
+•	Directed by - Director of the Episode
+•	Written by - Writer of the Episode
+•	Original air date - Original Date when the Episode was Aired
+•	Prod.code - Alphanumeric production code of an episode
+•	U.S. viewers(millions) - Number of US Viewers in Millions
+•	Season - Number of Season
+---
+
+------------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+```{R}
+library(readr)
+BigBang <- read_csv("~/Desktop/dataset.csv")
+View(BigBang)
+head(BigBang)
+```
+
+---
+Dataset: Game of Thrones 
+
+Overview: This is a dataset that shares information from the TV Show Game of Thrones. 
+
+•	Season - No. of Seasons
+•	No. of Episode (Season) - No. of Episode in a particular Season
+•	No. of Episode (Overall) - No. of Episode in the whole Series
+•	Title of the Episode - Name of the Episode
+•	Running Time (Minutes) - Runtime of the Episode in Minutes
+•	Directed by - Name(s) of the Director
+•	Written by - Name(s) of the Writer
+•	Original Air Date - Original Air Date of the Episode
+•	U.S. Viewers (Millions) - No of U.S. Viewers of the Episode in Millions
+•	Music by - Name(s) of the Composer
+•	Cinematography by - Name(s) of the Cinematographer
+•	Editing by - Name(s) of the Editor
+•	IMDb Rating - IMDb Rating of the Episode (10 point scale)
+•	Rotten Tomatoes Rating (Percentage) - Rotten Tomatoes Rating of the Episode in Percentage
+•	Metacritic Ratings - Metacritic Rating of the Episode
+•	Ordered - Date of Series/Season renewal 
+•	Filming Duration - Filming Duration of the Season 
+•	Novel(s) Adapted - Adapted from which Novel(s)
+•	Synopsis - Synopsis of the Episode
+---
+
+```{r}
+library(readr)
+GOT <- read_csv("~/Desktop/Game_of_Thrones.csv")
+View(GOT)
+head(GOT)
+```
