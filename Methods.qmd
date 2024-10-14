@@ -1,0 +1,31 @@
+---
+title: "Methods"
+format: html
+editor: visual
+---
+
+#                                  Methods
+
+## Study Design
+
+This study employs a quantitative, longitudinal design to investigate how age, dementia status, and socioeconomic factors influence cognitive decline over time in older adults. The primary focus was on the effect of age on cognitive function, measured by the Mini-Mental State Examination (MMSE) scores.
+
+## Data Collection
+
+Data was collected from OASIS Longitudinal Dataset, which included a sample of adults aged 60 - 96. The dataset comprised of 150 participants. Cognitive function was assessed using MMSE scores, while predictors included age, dementia status, and relevant socioeconomic factors.
+
+## Model Specification
+
+The model structure is as follows:
+
+$\text{MMSE}_{ij} = \beta_0 + \beta_1 \text{Age}_{ij} + u_{0j} + \epsilon_{ij}$
+
+Where:
+
+\- $\text{MMSE}_{ij}$ is the MMSE score for observation $i$ for subject $j$
+
+\- $\text{Age}_{ij}$ represents the fixed effect of age
+
+\- $u_{0j}$ is the random effect for subject $j$ (accounting for individual variability in cognitive decline)
+
+ - $\epsilon_{ij}$ is the residual error term
