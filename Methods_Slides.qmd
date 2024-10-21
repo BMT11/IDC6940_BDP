@@ -1,0 +1,46 @@
+---
+title: "Linear Mixed Models"
+subtitle: "Methods"
+author: "Bess Tyler"
+date: '`r Sys.Date()`'
+format:
+  revealjs
+course: Capstone Projects in Data Science
+bibliography: references.bib # file contains bibtex for references
+#always_allow_html: true # this allows to get PDF with HTML features
+self-contained: true
+execute: 
+  warning: false
+  message: false
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Study Design
+
+- **Type**: Quantitative, longitudinal study.
+- **Objective**: Investigate the influence of age, dementia status, and socioeconomic factors on cognitive decline in older adults.
+- **Focus**: Effect of age on cognitive function, assessed via Mini-Mental State Examination (MMSE) scores.
+
+
+
+# Data Collection
+
+- **Source**: OASIS Longitudinal Dataset.
+- **Sample**: 150 participants aged 60 to 96.
+- **Cognitive Assessment**: MMSE scores utilized to measure cognitive function.
+- **Predictors**: Included age, dementia status, and socioeconomic factors.
+
+
+# Model Specification
+
+- **Model Structure**: 
+  - $\text{MMSE}_{ij} = \beta_0 + \beta_1 \text{Age}_{ij} + u_{0j} + \epsilon_{ij}$
+  
+- **Variables**:
+  - $\text{MMSE}_{ij}$: MMSE score for observation \(i\) of subject \(j\).
+  - $\text{Age}_{ij}$: Fixed effect of age.
+  - $u_{0j}$: Random effect for subject \(j\) (individual variability in cognitive decline).
+  - $\epsilon_{ij}$: Residual error term.
+---
