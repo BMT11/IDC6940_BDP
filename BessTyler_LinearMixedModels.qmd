@@ -1,0 +1,380 @@
+---
+title: "Linear Mixed Models"
+subtitle: "Impact of Age and Education on Clinical Dementia Rating (CDR)"
+author: "Bess Tyler (Advisor: Dr. Seals)"
+date: '`r Sys.Date()`'
+format:
+  html:
+    code-fold: true
+course: Capstone Projects in Data Science
+self-contained: true
+execute: 
+  warning: false
+  message: false
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+Slides: slides.html
+
+## Introduction
+
+As the population of older adults continues to increase globally,
+cognitive decline has emerged as a significant concern, impacting not
+only the individuals affected but also their families and society as a
+whole. The factors contributing to cognitive deterioration are
+multifaceted, encompassing age, health conditions, lifestyle choices,
+socioeconomic status, and more. Understanding the interaction of these
+influences is crucial for effectively addressing the issue. Traditional
+statistical techniques often struggle to capture these complex
+relationships, which limits their ability to provide a comprehensive
+perspective on cognitive aging.
+
+An effective approach to this challenge is the use of Linear Mixed
+Models (LMMs), which enable a more nuanced analysis of complex data
+structures. These models can account for both fixed effects, which
+reflect general trends within populations, and random effects, which
+capture individual variability. This characteristic makes LMMs
+particularly valuable for the analysis of longitudinal data, where
+multiple observations are collected over time or across diverse groups.
+By employing LMMs, we can more thoroughly investigate how different
+factors influence cognitive function.
+
+The objective of this study is to utilize LMMs to explore the
+relationship between cognitive decline and various demographic and
+health-related variables, with a specific focus on Clinical Dementia
+Rating (CDR) as an indicator of cognitive performance. By analyzing the
+interactions between different factors, we aim to develop a clearer
+understanding of the elements that contribute to cognitive aging and how
+these differ across populations.
+
+## Methods
+
+::: {.callout-important appearance="minimal"}
+Bates stated that " A linear mixed model is described by the
+distribution of two vector-valued random variables: Y, the response, and
+beta , the vector of random effects.
+:::
+
+This study employs a quantitative, longitudinal design to investigate
+how age and education level influence cognitive decline over time in
+older adults, with a primary focus on the effect of age on cognitive
+function, measured using the Clinical Dementia Rating (CDR). To analyze
+this data, we used Linear Mixed Models (LMMs), which are well-suited for
+handling the complexities of repeated measures data and the hierarchical
+structure inherent in longitudinal studies. LMMs are particularly
+advantageous because they allow for the modeling of both fixed effects,
+such as the overall influence of age and education level on cognitive
+function, and random effects, which account for individual differences
+in baseline cognitive scores and trajectories of cognitive decline.
+Specifically, random intercepts were included in the model to capture
+individual differences in starting levels of cognitive function, while
+random slopes were used to model the variability in the rate of
+cognitive decline over time.
+
+LMMs are particularly appropriate for this study because cognitive
+decline in older adults is often heterogeneous, meaning that individuals
+may experience different rates of decline over time. The inclusion of
+random effects enables the model to account for this variability, which
+is crucial for accurately capturing individual trajectories of cognitive
+change. Additionally, the use of LMMs helps to mitigate potential biases
+from missing data, which is common in longitudinal studies, by allowing
+for more flexible handling of incomplete observations.
+
+### Model Specification
+
+The model structure is as follows:
+
+$$\text{Y}_{ij} = \beta_0 + \beta_1 \text_{ij} + u_{0j} + \epsilon_{ij}$\$
+
+Where:
+
+-   $\text{Y}_{ij}$ is the response for observation $i$ for subject $j$
+
+-   $\text{Age}_{ij}$ represents the fixed effect of age
+
+-   $u_{0j}$ is the random effect for subject $j$ (accounting for
+    individual variability in cognitive decline)
+
+-   $\epsilon_{ij}$ is the residual error term
+
+### Assumptions
+
+-   Linearity - The relationship between the dependent variable and the
+    predictors is assumed to be linear.
+
+-   Normality - The residuals are assumed to follow a normal
+    distribution.
+
+-   Independence - Residuals should be independent across observations.
+
+-   Homoscedasticity - The variance of the residuals should be constant
+    across all levels of the fixed predictors.
+
+## Analysis and Results
+
+### Data Collection
+
+Data was collected from OASIS Longitudinal Dataset, which included a
+sample of adults aged 60 - 96. The dataset comprised of 150
+participants. Cognitive function was assessed using Clinical Dementia
+Rating, while predictors included age, dementia status, and relevant
+socioeconomic factors.
+
+### Data Exploration and Visualization
+
+-   Dataset: OASIS-Longitudinal MRI Data in Nondemented and Demented
+    Older Adults
+
+    -   Source:
+        [NCBI](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2895005/)
+
+    **Summary of the chosen dataset:**
+
+    -   Includes MRI scans of 150 subjects aged 60-96.
+    -   Longitudinal data collected over 373 sessions.
+    -   Subjects scanned at least twice, with visits separated by at
+        least a year.
+    -   Clinical Dementia Rating (CDR) categorized as nondemented or
+        with mild Alzheimer’s disease.
+    -   72 were nondemented throughout, while 64 were demented initially
+        and remained so.
+    -   Participants were right-handed, consisting of 62 men and 88
+        women.
+    -   Each session had 3-4 T1-weighted MRI scans.
+
+    Table for this dataset can be seen below:
+
+    ```{r, warning=FALSE, echo=FALSE, message=FALSE, collapse=TRUE}
+    #install.packages("tableone")
+    library(tableone)
+    library (rmarkdown)
+    #install.packages("bibtex")
+    library(bibtex)
+
+    #install.packages("readr")
+    library(readr)
+
+    oasis_data <- read_csv("oasis_longitudinal.csv")
+
+    # Load necessary library
+    library(tableone)
+
+    # Recode M/F for easier handling in Table 1 (optional)
+    oasis_data$Gender <- ifelse(oasis_data$'M/F' == "M", "Male", "Female")
+
+    # Define the variables to be included in Table 1
+    vars <- c("Age", "Gender", "Hand", "EDUC", "SES", "MMSE", "CDR", "eTIV", "nWBV", "ASF")
+
+    # Define the stratifying variable (Group)
+    strata <- "Group"
+
+    # Create Table One
+    table1 <- CreateTableOne(vars = vars, strata = strata, data = oasis_data, factorVars = c("Gender", "Hand", "CDR"))
+
+    # Print the table with p-values
+    print(table1, showAllLevels = TRUE, smd = TRUE)
+
+    ```
+
+    The age distribution of participants is displayed in the visual
+    below:
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+
+# Visualization: Age of Participants
+counts <- table(oasis_data$Age)
+barplot(counts, 
+        main = "Age of Participants", 
+        xlab = "Age", 
+        col = "lightblue", 
+        border = "white")
+```
+
+The distribution of participants' education levels is presented in the
+visual below:
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+
+# Visualization: Age of Participants
+counts <- table(oasis_data$EDUC)
+barplot(counts, 
+        main = "Education Level of Participants", 
+        xlab = "Years of Education", 
+        col = "lightgreen", 
+        border = "white")
+```
+
+### Modeling and Results
+
+#### Data Processing and Cleaning
+
+```{r, warning=FALSE, echo=TRUE, message=FALSE}
+#install.packages("readr")
+library(readr)
+
+oasis_data <- read_csv("oasis_longitudinal.csv")
+
+# Remove duplicate rows
+oasis_data <- oasis_data[!duplicated(oasis_data), ]
+
+# Remove rows with missing values
+oasis_data <- na.omit(oasis_data)
+
+# View cleaned data
+head(oasis_data)
+
+```
+
+The data processing and cleaning steps involved in the provided R code
+are as follows:
+
+1.  **Loading the Data**:\
+    The first step is loading the necessary library readr, which is used
+    to read CSV files efficiently. The read_csv() function is used to
+    import the dataset named oasis_longitudinal.csv into R and store it
+    in oasis_data.
+
+2.  **Removing Duplicate Rows**:\
+    The line oasis_data \<- oasis_data\[!duplicated(oasis_data), \] is
+    used to remove duplicate rows from the dataset. The duplicated()
+    function checks for duplicate rows, and the ! operator negates it,
+    keeping only the unique rows. This ensures that any repeated data
+    points are eliminated, preventing redundancy in the analysis.
+
+3.  **Removing Rows with Missing Values**:\
+    The na.omit(oasis_data) function is applied to remove any rows that
+    contain missing values (NA). This step ensures that the dataset is
+    complete for analysis and avoids errors that may arise when handling
+    missing data. It eliminates any rows where at least one variable has
+    a missing value.
+
+4.  **Viewing the Cleaned Data**:\
+    Finally, the head(oasis_data) function is used to display the first
+    few rows of the cleaned dataset. This helps the user confirm that
+    the data has been processed and cleaned correctly, and it allows for
+    a quick visual inspection of the cleaned data.
+
+Overall, these steps ensure that the dataset is free of duplicates and
+missing values, making it ready for further analysis.
+
+## Linear Mixed Modeling
+
+### **Model 1**
+
+For the first model, we examined Age as the sole predictor of CDR. The
+linear mixed model used for model 1 is given by:
+
+$$
+\text{CDR}{ij} = \beta_0 + \beta_1 \cdot \text{AGE}{ij} + \mu_{i} + \epsilon_{ij}
+$$
+
+```{r, warning=FALSE, echo=T, message=FALSE}
+#install.packages("lme4")
+
+library(lme4)
+oasis_data$SubjectID <- oasis_data$'Subject ID'
+oasis_data$Age <- as.numeric(as.character(oasis_data$Age))
+
+# Fit the linear mixed model with only Age as the predictor
+model <- lmer(CDR ~ Age + (1 | SubjectID), data = oasis_data)
+summary(model)
+```
+
+####  {.smaller}
+
+$$
+\text{CDR}{ij} = -.2195 + 0.0066 \cdot \text{AGE}{ij} + \mu_{i} + \epsilon_{ij}
+$$
+
+**INTERPRETATION:**
+
+The fixed effect of age shows a positive estimate of 0.0066, suggesting
+that as age increases, the CDR score also tends to increase, indicating
+greater cognitive decline. The t-value of 2.085 suggests that this
+effect of age on cognitive decline is statistically significant. The
+intercept, however, of -0.219 and a t-value of -0.889, indicates the
+baseline CDR score when Age=0 . Although Age can not possibly be 0, it
+provides a reference point for the model. This equation shoes us that
+Age has a statistically significant positive relationship with CDR,
+suggesting that cognitive decline tends to increase slightly with age.
+
+### **Model 2**
+
+For the second model, we expanded our model to include Education Level
+(EDUC) as an additional predictor. The linear mixed model used for model
+2 is given by:
+
+$$ \text{CDR}{ij} = \beta_0 + \beta_1 \cdot \text{AGE}{ij} + \beta_2 \cdot \text{EDUC}{ij} + \mu_{i} + \epsilon_{ij} $$
+
+```{r, warning=FALSE, echo=T, message=FALSE}
+oasis_data$Age <- as.numeric(as.character(oasis_data$Age))
+# Fit Linear Mixed Model with Age and Education as the predictors
+model <- lmer(CDR ~ Age + EDUC + (1 | SubjectID), data = oasis_data)
+summary(model)
+
+
+```
+
+$$
+\text{CDR}{ij} = 0.0403 + 0.0064 \cdot \text{Age}{ij}  -  0.0164 \cdot \text{EDUC}{ij} + \mu_{i} + \epsilon_{ij}
+$$
+
+**INTERPRETATION:**
+
+The fixed effect of Age is statistically significant, with an estimate
+of 0.0064 (t = 2.009), suggesting that as age increases, cognitive
+decline, as measured by CDR, also tends to increase. This positive
+relationship indicates that older participants generally exhibit higher
+CDR scores, reflecting more cognitive decline. In contrast, the fixed
+effect of Education Level is not statistically significant, with an
+estimate of -0.0164 and a t-value of -1.553. This suggests that
+education level, as measured here, does not show a strong or significant
+relationship with cognitive decline in this model.
+
+### Conclusion
+
+The results for my analysis reveal Age has a statistically significant
+effect on Clinical Dementia Rating, with older age associated with
+slightly higher dementia severity. Education, while included as a
+predictor, does not show a significant effect on CDR in this model. This
+suggests that Age is a more important factor in cognitive decline, but
+Education might not be as influential in this specific dataset.
+
+Linear Mixed Models offer a powerful and flexible approach to analyzing
+complex data structures that involve both fixed and random effects. They
+allow for more accurate conclusions in the presence of correlations and
+varying group-level effects, making them indispensable for research in
+many fields.
+
+## References
+
+Agostinelli, C., & Yohai, V. J. (2016). Composite robust estimators for
+linear mixed models. *Journal of the American Statistical Association*,
+111(516), 1764-1774. <https://doi.org/10.1080/01621459.2015.1115358>
+
+Bates, D., Mächler, M., Bolker, B., and Walker, S.
+(2015), “Fitting Linear Mixed- Effects Models Using lme4,” *Journal of
+Statistical Software*, 67,
+1–48. <https://doi.org/10.18637/jss.v067.i01>.
+
+Booth, J. G., & Hobert, J. P. (1998). Standard Errors of Prediction in
+Generalized Linear Mixed Models. *Journal of the American Statistical
+Association*, *93*(441), 262–272.
+<https://www.tandfonline.com/doi/abs/10.1080/01621459.1998.10474107>
+
+Brown, V. A. (2021). An introduction to linear mixed-effects modeling in
+R. *Advances in Methods and Practices in Psychological Science, 4*(1),
+1–19. <https://doi.org/10.1177/2515245920960351>
+
+McCulloch, C. E. (1996). An introduction to generalized linear mixed
+models. In *NSF-CBMS Regional Conference Series in Probability and
+Statistics* (Vol. 7). <https://doi.org/10.1214/lnms/1215451825>
+
+Sinha, S. K. (2004). Robust Analysis of Generalized Linear Mixed Models.
+*Journal of the American Statistical Association*, *99*(466), 451–460.
+<https://doi.org/10.1198/016214504000000340>
+
+Starkweather, J. (2010). Linear mixed effects modeling using R.
+*Unpublished Manuscript*. <https://doi.org/10.13140/RG.2.1.3420.4240>
