@@ -3,6 +3,8 @@ title: "Linear Mixed Models"
 subtitle: "Impact of Age and Education on Clinical Dementia Rating (CDR)"
 author: "Bess Tyler (Advisor: Dr. Seals)"
 date: '`r Sys.Date()`'
+toc: true
+toc-depth: 4
 format:
   html:
     code-fold: true
@@ -16,30 +18,28 @@ editor:
     wrap: 72
 ---
 
-Slides: slides.html
-
 ## Introduction
 
 As the population of older adults continues to increase globally,
-cognitive decline has emerged as a significant concern, impacting not
-only the individuals affected but also their families and society as a
-whole. The factors contributing to cognitive deterioration are
-multifaceted, encompassing age, health conditions, lifestyle choices,
-socioeconomic status, and more. Understanding the interaction of these
-influences is crucial for effectively addressing the issue. Traditional
-statistical techniques often struggle to capture these complex
-relationships, which limits their ability to provide a comprehensive
-perspective on cognitive aging.
+cognitive decline has become a significant concern, impacting not only
+the individuals affected but also their families and society as a whole.
+The factors contributing to cognitive deterioration are multifaceted,
+including age, health conditions, lifestyle choices, socioeconomic
+status, and more. Understanding the interaction of these influences is
+crucial for effectively addressing the issue. Traditional statistical
+techniques often struggle to capture these complex relationships, which
+limits their ability to provide a comprehensive perspective on cognitive
+aging \[4,6\].
 
 An effective approach to this challenge is the use of Linear Mixed
-Models (LMMs), which enable a more nuanced analysis of complex data
-structures. These models can account for both fixed effects, which
+Models (LMMs), which enable a more sophisticated analysis of complex
+data structures. These models can account for both fixed effects, which
 reflect general trends within populations, and random effects, which
-capture individual variability. This characteristic makes LMMs
+capture individual variability \[2,6\]. This characteristic makes LMMs
 particularly valuable for the analysis of longitudinal data, where
-multiple observations are collected over time or across diverse groups.
-By employing LMMs, we can more thoroughly investigate how different
-factors influence cognitive function.
+multiple observations are collected over time \[3\]. By employing LMMs,
+we can more thoroughly investigate how different factors influence
+cognitive function \[1, 5\].
 
 The objective of this study is to utilize LMMs to explore the
 relationship between cognitive decline and various demographic and
@@ -47,14 +47,14 @@ health-related variables, with a specific focus on Clinical Dementia
 Rating (CDR) as an indicator of cognitive performance. By analyzing the
 interactions between different factors, we aim to develop a clearer
 understanding of the elements that contribute to cognitive aging and how
-these differ across populations.
+these differ across populations \[7\].
 
 ## Methods
 
 ::: {.callout-important appearance="minimal"}
 Bates stated that " A linear mixed model is described by the
 distribution of two vector-valued random variables: Y, the response, and
-beta , the vector of random effects.
+beta , the vector of random effects. \[2\]
 :::
 
 This study employs a quantitative, longitudinal design to investigate
@@ -63,30 +63,30 @@ older adults, with a primary focus on the effect of age on cognitive
 function, measured using the Clinical Dementia Rating (CDR). To analyze
 this data, we used Linear Mixed Models (LMMs), which are well-suited for
 handling the complexities of repeated measures data and the hierarchical
-structure inherent in longitudinal studies. LMMs are particularly
-advantageous because they allow for the modeling of both fixed effects,
-such as the overall influence of age and education level on cognitive
-function, and random effects, which account for individual differences
-in baseline cognitive scores and trajectories of cognitive decline.
-Specifically, random intercepts were included in the model to capture
-individual differences in starting levels of cognitive function, while
-random slopes were used to model the variability in the rate of
-cognitive decline over time.
+structure inherent in longitudinal studies \[3, 5\]. LMMs are
+particularly advantageous because they allow for the modeling of both
+fixed effects, such as the overall influence of age and education level
+on cognitive function, and random effects, which account for individual
+differences in baseline cognitive scores and trajectories of cognitive
+decline \[2, 4\]. Specifically, random intercepts were included in the
+model to capture individual differences in starting levels of cognitive
+function, while random slopes were used to model the variability in the
+rate of cognitive decline over time \[1, 6\].
 
 LMMs are particularly appropriate for this study because cognitive
 decline in older adults is often heterogeneous, meaning that individuals
 may experience different rates of decline over time. The inclusion of
 random effects enables the model to account for this variability, which
 is crucial for accurately capturing individual trajectories of cognitive
-change. Additionally, the use of LMMs helps to mitigate potential biases
-from missing data, which is common in longitudinal studies, by allowing
-for more flexible handling of incomplete observations.
+change \[7\]. Additionally, the use of LMMs helps to mitigate potential
+biases from missing data, which is common in longitudinal studies, by
+allowing for more flexible handling of incomplete observations \[3, 4\].
 
 ### Model Specification
 
 The model structure is as follows:
 
-$$\text{Y}_{ij} = \beta_0 + \beta_1 \text_{ij} + u_{0j} + \epsilon_{ij}$\$
+$Y_{ij} = \beta_0 + \beta_{1ij} + u_{0j} + \epsilon_{ij}$
 
 Where:
 
@@ -144,22 +144,22 @@ socioeconomic factors.
         women.
     -   Each session had 3-4 T1-weighted MRI scans.
 
-    Table for this dataset can be seen below:
+    Table 1 for this dataset can be seen below:
 
-    ```{r, warning=FALSE, echo=FALSE, message=FALSE, collapse=TRUE}
+    ```{r, warning=FALSE, echo=FALSE, message=FALSE}
     #install.packages("tableone")
+    #install.packages("bibtex")
+    #install.packages("readr")
+
+    #Load libraries
     library(tableone)
     library (rmarkdown)
-    #install.packages("bibtex")
     library(bibtex)
-
-    #install.packages("readr")
     library(readr)
 
+    #Load data
     oasis_data <- read_csv("oasis_longitudinal.csv")
 
-    # Load necessary library
-    library(tableone)
 
     # Recode M/F for easier handling in Table 1 (optional)
     oasis_data$Gender <- ifelse(oasis_data$'M/F' == "M", "Male", "Female")
@@ -263,7 +263,7 @@ missing values, making it ready for further analysis.
 
 ### **Model 1**
 
-For the first model, we examined Age as the sole predictor of CDR. The
+For the first model, we examined age as the sole predictor of CDR. The
 linear mixed model used for model 1 is given by:
 
 $$
@@ -294,11 +294,11 @@ The fixed effect of age shows a positive estimate of 0.0066, suggesting
 that as age increases, the CDR score also tends to increase, indicating
 greater cognitive decline. The t-value of 2.085 suggests that this
 effect of age on cognitive decline is statistically significant. The
-intercept, however, of -0.219 and a t-value of -0.889, indicates the
-baseline CDR score when Age=0 . Although Age can not possibly be 0, it
-provides a reference point for the model. This equation shoes us that
-Age has a statistically significant positive relationship with CDR,
-suggesting that cognitive decline tends to increase slightly with age.
+intercept of -0.219 and a t-value of -0.889, indicates the baseline CDR
+score when age=0 . Although age can not possibly be 0, it provides a
+reference point for the model. This equation shows us that age has a
+statistically significant positive relationship with CDR, suggesting
+that cognitive decline tends to increase slightly with age.
 
 ### **Model 2**
 
@@ -323,7 +323,7 @@ $$
 
 **INTERPRETATION:**
 
-The fixed effect of Age is statistically significant, with an estimate
+The fixed effect of age is statistically significant, with an estimate
 of 0.0064 (t = 2.009), suggesting that as age increases, cognitive
 decline, as measured by CDR, also tends to increase. This positive
 relationship indicates that older participants generally exhibit higher
@@ -333,48 +333,49 @@ estimate of -0.0164 and a t-value of -1.553. This suggests that
 education level, as measured here, does not show a strong or significant
 relationship with cognitive decline in this model.
 
-### Conclusion
+## Conclusion
 
-The results for my analysis reveal Age has a statistically significant
+The results for my analysis reveal age has a statistically significant
 effect on Clinical Dementia Rating, with older age associated with
 slightly higher dementia severity. Education, while included as a
 predictor, does not show a significant effect on CDR in this model. This
-suggests that Age is a more important factor in cognitive decline, but
+suggests that age is a more important factor in cognitive decline, but
 Education might not be as influential in this specific dataset.
 
 Linear Mixed Models offer a powerful and flexible approach to analyzing
 complex data structures that involve both fixed and random effects. They
 allow for more accurate conclusions in the presence of correlations and
 varying group-level effects, making them indispensable for research in
-many fields.
+many fields \[1, 2, 4, 5\].
 
 ## References
 
-Agostinelli, C., & Yohai, V. J. (2016). Composite robust estimators for
-linear mixed models. *Journal of the American Statistical Association*,
-111(516), 1764-1774. <https://doi.org/10.1080/01621459.2015.1115358>
+\[1\]Agostinelli, C., & Yohai, V. J. (2016). Composite robust estimators
+for linear mixed models. *Journal of the American Statistical
+Association*, 111(516), 1764-1774.
+<https://doi.org/10.1080/01621459.2015.1115358>
 
-Bates, D., Mächler, M., Bolker, B., and Walker, S.
+\[2\]Bates, D., Mächler, M., Bolker, B., and Walker, S.
 (2015), “Fitting Linear Mixed- Effects Models Using lme4,” *Journal of
 Statistical Software*, 67,
 1–48. <https://doi.org/10.18637/jss.v067.i01>.
 
-Booth, J. G., & Hobert, J. P. (1998). Standard Errors of Prediction in
-Generalized Linear Mixed Models. *Journal of the American Statistical
+\[3\]Booth, J. G., & Hobert, J. P. (1998). Standard Errors of Prediction
+in Generalized Linear Mixed Models. *Journal of the American Statistical
 Association*, *93*(441), 262–272.
 <https://www.tandfonline.com/doi/abs/10.1080/01621459.1998.10474107>
 
-Brown, V. A. (2021). An introduction to linear mixed-effects modeling in
-R. *Advances in Methods and Practices in Psychological Science, 4*(1),
-1–19. <https://doi.org/10.1177/2515245920960351>
+\[4\]Brown, V. A. (2021). An introduction to linear mixed-effects
+modeling in R. *Advances in Methods and Practices in Psychological
+Science, 4*(1), 1–19. <https://doi.org/10.1177/2515245920960351>
 
-McCulloch, C. E. (1996). An introduction to generalized linear mixed
-models. In *NSF-CBMS Regional Conference Series in Probability and
+\[5\]McCulloch, C. E. (1996). An introduction to generalized linear
+mixed models. In *NSF-CBMS Regional Conference Series in Probability and
 Statistics* (Vol. 7). <https://doi.org/10.1214/lnms/1215451825>
 
-Sinha, S. K. (2004). Robust Analysis of Generalized Linear Mixed Models.
-*Journal of the American Statistical Association*, *99*(466), 451–460.
-<https://doi.org/10.1198/016214504000000340>
+\[6\]Sinha, S. K. (2004). Robust Analysis of Generalized Linear Mixed
+Models. *Journal of the American Statistical Association*, *99*(466),
+451–460. <https://doi.org/10.1198/016214504000000340>
 
-Starkweather, J. (2010). Linear mixed effects modeling using R.
+\[7\]Starkweather, J. (2010). Linear mixed effects modeling using R.
 *Unpublished Manuscript*. <https://doi.org/10.13140/RG.2.1.3420.4240>
